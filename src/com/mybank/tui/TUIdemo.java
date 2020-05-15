@@ -88,23 +88,24 @@ public class TUIdemo extends TApplication {
                     
                     BufferedReader out = new BufferedReader(new FileReader(file));
                     
-                    String custNumString = String.valueOf(custNum);
                     String output = out.readLine();
                     
                     String[] customerData;
                     
+                    int emptyLinesCount = 0;
+                    
                     while(output != null) {
-                        int custNumPosition = output.length() - custNumString.length();
                         customerData = output.split("\t");
                         
-                        if(custNumPosition <= 0 || output.equals("") || !customerData[2].equals(custNumString))  {
+                        if(output.equals(""))  {
                             output = out.readLine();
-                        } else {
+                            emptyLinesCount += 1;
+                        } else if(emptyLinesCount == custNum) {
                             if(!customerData[0].equals("S") && !customerData[0].equals("C")) {
                                 Customer customer = new Customer(customerData[0], customerData[1]);
                                 output = out.readLine();
                                 
-                                while(!output.equals("")) {
+                                while(!"".equals(output) && output != null) {
                                     customerData = output.split("\t");
 
                                     if(customerData[0].equals("C")) {
@@ -151,8 +152,9 @@ public class TUIdemo extends TApplication {
                             } else {
                                 output = out.readLine();
                             }
-                        }              
-                         
+                        } else {
+                            output = out.readLine();
+                        }            
                     }
                     
                     out.close();
